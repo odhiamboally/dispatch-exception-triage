@@ -53,3 +53,16 @@ $uncertainSummary = Get-Content artifacts/uncertain-output/summary.json -Raw | C
 Assert-True ($uncertain[0].terminal -eq 'Unknown' -and $uncertain[0].event_timestamp -eq 'not-a-date' -and $uncertain[0].timestamp_basis -eq 'Unparsed') 'Unknown values must be retained'
 Assert-True ($uncertainSummary.records_requiring_review -eq 1 -and @($uncertainSummary.issues).Count -eq 2) 'Unknown values must be flagged'
 'PASS: supplied records, event counts, CSV/JSON parity, uncertainty notes, malformed rows, duplicate IDs, unknown terminal, invalid timestamp.'
+
+# The HTML must expose the same records and review notes, and escape input data.
+$html = Get-Content artifacts/verification/report.html -Raw
+foreach ($r in $rows) {
+    Assert-True ($html.Contains($r.exception_id) -and $html.Contains($r.event_timestamp)) 'HTML record missing'
+}
+Assert-True ($html.Contains('Records requiring review') -and $html.Contains('Source timezone') -eq $false) 'HTML labels mismatch'
+Assert-True ($html.Contains('source timezone absent') -and $html.Contains('@media print') -and $html.Contains('UTC · Report time')) 'HTML review, print layout or clock missing'
+[IO.File]::WriteAllLines("$PWD/artifacts/html-escape.csv", @($header,'<script>alert(1)</script>,T3,missed_pickup,SWFT,2026-08-14T10:03:00Z'))
+Run-App 'artifacts/html-escape.csv' 'artifacts/html-escape-output' 0
+$escaped = Get-Content artifacts/html-escape-output/report.html -Raw
+Assert-True ($escaped.Contains('&lt;script&gt;alert(1)&lt;/script&gt;') -and -not $escaped.Contains('<script>')) 'HTML input must be escaped'
+'PASS: HTML record content, uncertainty notes, generation timestamp, print CSS and input escaping.'

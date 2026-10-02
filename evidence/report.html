@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dispatch Exception Triage — Data Quality Report</title>
+<style>
+:root { --ink:#16324b; --teal:#006d77; --amber:#805400; --paper:#f2f6f8; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font:15px/1.5 system-ui, sans-serif; }
+main { max-width:1150px; margin:32px auto; padding:32px; background:white; border-radius:12px; }
+header { border-top:6px solid var(--teal); padding-top:18px; }
+h1 { margin:4px 0; font-size:30px; } h2 { margin-top:28px; font-size:21px; }
+.subtitle { color:#455c70; } .metrics { display:flex; gap:16px; margin:24px 0; flex-wrap:wrap; }
+.metric { padding:16px 22px; background:#e9f5f4; border-left:4px solid var(--teal); flex:1; min-width:180px; }
+.metric strong { display:block; font-size:30px; } .notice { padding:16px; background:#fff5da; border-left:4px solid var(--amber); }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { background:var(--ink); color:white; text-align:left; }
+th, td { padding:10px; border-bottom:1px solid #d8e2e8; vertical-align:top; overflow-wrap:anywhere; }
+tr:nth-child(even) { background:#f4f8fa; } .review { color:var(--amber); }
+.table-wrap { overflow-x:auto; } footer { margin-top:28px; color:#455c70; font-size:13px; }
+@page { size:A4 landscape; margin:12mm; }
+@media print {
+ body { background:white; font-size:11px; } main { max-width:none; margin:0; padding:0; }
+ h1 { font-size:24px; } h2 { font-size:17px; } th,td { padding:6px; }
+ .table-wrap { overflow:visible; } thead { display:table-header-group; }
+ tr { break-inside:avoid; } h2 { break-after:avoid; } .metrics,.notice { break-inside:avoid; }
+}
+</style>
+</head>
+<body><main>
+<header><div class="subtitle">Corrigan Peak Logistics · Dispatch Exception Triage</div>
+<h1>Exception Data Quality Report</h1><p class="subtitle">Generated 2026-10-02 06:15:37 UTC · Report time is separate from source event times.</p></header>
+<section class="metrics" aria-label="Summary">
+<div class="metric"><strong>5</strong>Total exceptions</div>
+<div class="metric"><strong>4</strong>Records requiring review</div>
+<div class="metric"><strong>5</strong>Field review notes</div>
+</section>
+<div class="notice"><strong>Human review required where flagged.</strong> Missing carriers remain unknown. Source timestamps without timezone information are not labelled UTC. Counts include records awaiting review.</div>
+<h2>Exceptions by event type</h2>
+<table><thead><tr><th scope="col">Event type</th><th scope="col">Count</th></tr></thead><tbody><tr><td>carrier_substitution</td><td>1</td></tr><tr><td>doc_mismatch</td><td>2</td></tr><tr><td>missed_pickup</td><td>2</td></tr></tbody></table>
+<h2>Normalized records</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Exception ID</th><th scope="col">Terminal</th><th scope="col">Event type</th><th scope="col">Carrier</th><th scope="col">Event timestamp</th><th scope="col">Time basis</th></tr></thead><tbody><tr><td>CPX-88213</td><td>Terminal 3</td><td>missed_pickup</td><td>SWFT</td><td>2026-08-14T09:12:00</td><td>Unspecified</td></tr><tr><td>CPX-88214</td><td>Terminal 3</td><td>doc_mismatch</td><td>SWFT</td><td>2026-08-14T09:45:00</td><td>Unspecified</td></tr><tr><td>CPX-88215</td><td>Terminal 3</td><td>missed_pickup</td><td>SWFT</td><td>2026-08-14T10:03:00Z</td><td>UTC</td></tr><tr><td>CPX-88216</td><td>Terminal 3</td><td>doc_mismatch</td><td><strong class="review">Missing</strong></td><td>2026-08-14T11:47:00</td><td>Unspecified</td></tr><tr><td>CPX-88217</td><td>Terminal 3</td><td>carrier_substitution</td><td>RLCX</td><td>2026-08-15T08:02:00</td><td>Unspecified</td></tr></tbody></table></div>
+<h2>Records requiring confirmation</h2>
+<table><thead><tr><th scope="col">Exception ID</th><th scope="col">Field</th><th scope="col">Reason</th></tr></thead><tbody><tr><td>CPX-88213</td><td>event_ts</td><td>Formatting normalized; source timezone absent. Do not assume UTC.</td></tr><tr><td>CPX-88214</td><td>event_ts</td><td>Formatting normalized; source timezone absent. Do not assume UTC.</td></tr><tr><td>CPX-88216</td><td>carrier_code</td><td>Missing carrier retained as blank; confirm with client IT.</td></tr><tr><td>CPX-88216</td><td>event_ts</td><td>Formatting normalized; source timezone absent. Do not assume UTC.</td></tr><tr><td>CPX-88217</td><td>event_ts</td><td>Formatting normalized; source timezone absent. Do not assume UTC.</td></tr></tbody></table>
+<footer>Local export-normalization report. This does not confirm production scoring or routing readiness. Open your browser's Print dialog and choose Save as PDF to export this report.</footer>
+</main></body></html>

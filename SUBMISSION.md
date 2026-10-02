@@ -11,7 +11,7 @@ Repository: [Dispatch Exception Triage](https://github.com/odhiamboally/dispatch
 - [Client status update](https://github.com/odhiamboally/dispatch-exception-triage/blob/main/CLIENT-UPDATE.md)
 - [Verification evidence](https://github.com/odhiamboally/dispatch-exception-triage/blob/main/VERIFICATION.md)
 
-Access: the repository is currently private. These links require granted reviewer access; attach the source ZIP/build file so access to the build does not depend on GitHub permissions.
+Access: the repository is public. The source ZIP/build file is also available for a runnable attachment.
 
 ## Task 1 — Triage and weekly plan
 
@@ -42,7 +42,13 @@ C, B, and D start concurrently. C is first because the external response must be
 
 ### Technical judgment
 
-A database flag alone cannot make the queue push and database write atomic. Prefer stable exception identity and durable receiver deduplication, with an outbox where appropriate; verify the actual queue contract before selecting a design. An in-memory lock only protects one process and cannot prove safe retries after failure.
+A database flag alone cannot make the queue push and database write atomic. I would review three complementary controls with Priya, selecting the smallest change compatible with the existing queue and database:
+
+- **Idempotent processing:** use a stable routing-operation identity (exception ID plus an agreed routing version where rerouting is legitimate), backed by a unique database constraint or receiver inbox. Deduplication and dispatcher-task creation must be atomic at the receiver so overlapping consumers cannot both create a task.
+- **Transactional outbox:** commit the routing intent and outbox message in the same database transaction, then publish through a retrying relay. A crash after publishing but before marking the outbox message sent can still cause redelivery; outbox does not remove the need for receiver idempotency.
+- **Durable delivery/subscription, if the broker supports it:** retain unacknowledged messages across consumer outages, acknowledge only after durable processing, and provide retry/dead-letter handling and monitoring. A durable queue may already provide this; a separate subscription is relevant to a topic-based design. Durability prevents loss during outages, not duplicate effects.
+
+Acceptance evidence should exercise publish success followed by state-update failure, overlapping polls, receiver failure before acknowledgement, and recovery after restart. Each routing operation must create one dispatcher-visible task; intentional reroutes need their own explicit identity. An in-memory lock is insufficient across processes or restarts. The brief does not identify the actual broker, so these are review options, not a claim that we have implemented a new messaging architecture.
 
 The CSV lacks urgency inputs and four timezone offsets. Cleaning it cannot establish the true Terminal 3 scoring contract or repair production. Client IT confirmation remains necessary.
 
@@ -58,7 +64,7 @@ dotnet run --file NormalizeExceptions.cs -- data/exceptions.csv artifacts
 pwsh -File scripts/verify.ps1
 ```
 
-The app reads the supplied simple CSV, maps T3 to Terminal 3, uppercases carrier codes, and standardizes timestamps to ISO formatting while preserving whether a timezone is known. It writes normalized CSV/JSON plus summary JSON with counts and record-level review notes. The missing carrier stays blank; four timestamps stay explicitly timezone-unspecified rather than being falsely labelled UTC. I checked each expected normalized row, every event count, the exact review IDs and fields, and agreement between CSV and JSON outputs. Additional cases verify rejection of malformed rows and duplicate IDs before output and preservation/reporting of unknown terminals and invalid timestamps. All these automated checks passed. The utility does not resolve the production EDI scoring contract; IT confirmation remains required.
+The app reads the supplied simple CSV, maps T3 to Terminal 3, uppercases carrier codes, and standardizes timestamps to ISO formatting while preserving whether a timezone is known. It writes normalized CSV/JSON plus summary JSON with counts and record-level review notes, and a styled HTML report with a print layout for browser PDF export. TimeProvider supplies the report-generation time; it does not infer source event timezones. The missing carrier stays blank; four timestamps stay explicitly timezone-unspecified rather than being falsely labelled UTC. I checked each expected normalized row, every event count, the exact review IDs and fields, and agreement between CSV and JSON outputs. Additional cases verify rejection of malformed rows and duplicate IDs before output and preservation/reporting of unknown terminals and invalid timestamps. All these automated checks passed. The utility does not resolve the production EDI scoring contract; IT confirmation remains required.
 
 | Event type | Count |
 |---|---:|

@@ -14,3 +14,6 @@ Executed locally with .NET SDK 10.0.401 on October 2, 2026.
 - No production routing service, integration, client review, or deployment has been performed.
 
 Generated example outputs are retained under evidence/. To reproduce fresh outputs, follow README.md.
+
+- Styled HTML verified for record values, review notes, UTC generation timestamp, print stylesheet, and HTML escaping of input. Browser print-to-PDF output has not been exported or visually verified.
+- TimeProvider supplies generation time only; the four missing source timezones remain unspecified.

@@ -27,6 +27,12 @@ C, B, and D start concurrently. C is first because the external response must be
 
 ## Technical judgment
 
-A database flag alone cannot make the queue push and database write atomic. Prefer stable exception identity and durable receiver deduplication, with an outbox where appropriate; verify the actual queue contract before selecting a design. An in-memory lock only protects one process and cannot prove safe retries after failure.
+A database flag alone cannot make the queue push and database write atomic. I would review three complementary controls with Priya, selecting the smallest change compatible with the existing queue and database:
+
+- **Idempotent processing:** use a stable routing-operation identity (exception ID plus an agreed routing version where rerouting is legitimate), backed by a unique database constraint or receiver inbox. Deduplication and dispatcher-task creation must be atomic at the receiver so overlapping consumers cannot both create a task.
+- **Transactional outbox:** commit the routing intent and outbox message in the same database transaction, then publish through a retrying relay. A crash after publishing but before marking the outbox message sent can still cause redelivery; outbox does not remove the need for receiver idempotency.
+- **Durable delivery/subscription, if the broker supports it:** retain unacknowledged messages across consumer outages, acknowledge only after durable processing, and provide retry/dead-letter handling and monitoring. A durable queue may already provide this; a separate subscription is relevant to a topic-based design. Durability prevents loss during outages, not duplicate effects.
+
+Acceptance evidence should exercise publish success followed by state-update failure, overlapping polls, receiver failure before acknowledgement, and recovery after restart. Each routing operation must create one dispatcher-visible task; intentional reroutes need their own explicit identity. An in-memory lock is insufficient across processes or restarts. The brief does not identify the actual broker, so these are review options, not a claim that we have implemented a new messaging architecture.
 
 The CSV lacks urgency inputs and four timezone offsets. Cleaning it cannot establish the true Terminal 3 scoring contract or repair production. Client IT confirmation remains necessary.
