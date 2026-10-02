@@ -1,0 +1,36 @@
+{
+  "total_records": 5,
+  "counts_by_event_type": {
+    "carrier_substitution": 1,
+    "doc_mismatch": 2,
+    "missed_pickup": 2
+  },
+  "records_requiring_review": 4,
+  "issues": [
+    {
+      "exception_id": "CPX-88213",
+      "field": "event_ts",
+      "reason": "Formatting normalized; source timezone absent. Do not assume UTC."
+    },
+    {
+      "exception_id": "CPX-88214",
+      "field": "event_ts",
+      "reason": "Formatting normalized; source timezone absent. Do not assume UTC."
+    },
+    {
+      "exception_id": "CPX-88216",
+      "field": "carrier_code",
+      "reason": "Missing carrier retained as blank; confirm with client IT."
+    },
+    {
+      "exception_id": "CPX-88216",
+      "field": "event_ts",
+      "reason": "Formatting normalized; source timezone absent. Do not assume UTC."
+    },
+    {
+      "exception_id": "CPX-88217",
+      "field": "event_ts",
+      "reason": "Formatting normalized; source timezone absent. Do not assume UTC."
+    }
+  ]
+}
