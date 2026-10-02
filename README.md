@@ -2,6 +2,10 @@
 
 A .NET 10 command-line utility that cleans the supplied dispatch exception export and reports event counts and data requiring human review.
 
+## Assessment walkthrough
+
+[Watch the recorded walkthrough on Loom](https://www.loom.com/share/8c12573a4e634d7d8ae1c974bc6b8cf7).
+
 ## Delivery documents
 
 - [Weekly delivery plan and triage](DELIVERY-PLAN.md)

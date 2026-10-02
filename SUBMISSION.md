@@ -1,4 +1,4 @@
-Video: **[ADD PUBLIC VIDEO LINK BEFORE SUBMISSION]**
+Video: [Watch the assessment walkthrough on Loom](https://www.loom.com/share/8c12573a4e634d7d8ae1c974bc6b8cf7)
 
 # Dispatch Exception Triage — Allan Odhiambo
 
@@ -110,4 +110,4 @@ Allan
 I used AI as a discussion and execution partner: I proposed an initial approach to the request priorities, discussed the rankings and execution order with it, and refined the plan against the launch risks and dependencies. I chose the .NET file-based app approach with AI input and directed the repository setup, tooling choices, TimeProvider use, and formatted report output. AI helped read the materials, polish the triage, client update and presentation script from our discussion, scaffold the utility, and write automated checks; the final priority calls, client commitments and personal statements remained mine to review and own. One AI-generated first draft used reflection-based System.Text.Json serialization, which failed under the file-based app defaults; we replaced it with source-generated serialization and reran the checks successfully. I also raised idempotency, the outbox pattern and durable subscriptions for discussion, distinguishing reliable delivery from preventing duplicate dispatcher tasks.
 
 ---
-Submission check: replace the video placeholder with an accessible URL; attach the actual .cs build file and source CSV (or the repository ZIP); check links in a private browser window. Review the AI note personally before submitting it in my voice.
+Submission check: confirm the Loom link opens in a private browser window; attach the actual .cs build file and source CSV (or the repository ZIP); check links in a private browser window. Review the AI note personally before submitting it in my voice.
