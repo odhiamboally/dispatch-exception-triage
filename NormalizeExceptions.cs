@@ -4,8 +4,15 @@ using System.Text.Json.Serialization;
 
 // Deliberately scoped to the supplied simple, unquoted five-column CSV.
 // Ambiguous data is retained and reported; this app does not invent a timezone or carrier.
-var input = args.Length > 0 ? args[0] : "data/exceptions.csv";
-var output = args.Length > 1 ? args[1] : "artifacts";
+var noOpen = args.Contains("--no-open", StringComparer.Ordinal);
+var paths = args.Where(a => a != "--no-open").ToArray();
+if (paths.Length > 2)
+{
+    Console.Error.WriteLine("Usage: dotnet run --file NormalizeExceptions.cs -- [input.csv] [output-folder] [--no-open]");
+    return 1;
+}
+var input = paths.Length > 0 ? paths[0] : "data/exceptions.csv";
+var output = paths.Length > 1 ? paths[1] : "artifacts";
 try
 {
     var lines = await File.ReadAllLinesAsync(input);
@@ -80,6 +87,22 @@ try
     foreach (var entry in counts) Console.WriteLine($"{entry.Key}: {entry.Value}");
     Console.WriteLine($"Review required for {issues.Select(x => x.ExceptionId).Distinct().Count()} records ({issues.Count} field notes).");
     Console.WriteLine($"Outputs: {Path.GetFullPath(output)}");
+    var reportPath = Path.GetFullPath(Path.Combine(output, "report.html"));
+    Console.WriteLine($"Report: {reportPath}");
+    if (!noOpen)
+    {
+        try
+        {
+            using var viewer = System.Diagnostics.Process.Start(
+                new System.Diagnostics.ProcessStartInfo(reportPath) { UseShellExecute = true });
+            Console.WriteLine("Requested opening the report in your default browser.");
+        }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or PlatformNotSupportedException)
+        {
+            Console.Error.WriteLine($"Report generated, but automatic opening failed: {ex.Message}");
+            Console.Error.WriteLine($"Open this file manually: {reportPath}");
+        }
+    }
     return 0;
 }
 catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)

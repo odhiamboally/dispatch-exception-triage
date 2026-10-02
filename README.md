@@ -110,7 +110,19 @@ dotnet run --file NormalizeExceptions.cs -- "data/exceptions.csv" "artifacts/ano
 
 ### Open the formatted report or save a PDF
 
-Open artifacts/report.html in your browser (double-click it in File Explorer). The report uses navy, teal, and amber colours, with a separate UTC generation timestamp supplied by TimeProvider.
+After a successful run, the app automatically requests opening artifacts/report.html in your default browser. If it does not open, or you want to reopen it, run this from the repository root:
+
+```powershell
+Invoke-Item .\artifacts\report.html
+```
+
+For unattended runs, generate the report without launching a browser:
+
+```powershell
+dotnet run --file NormalizeExceptions.cs -- data/exceptions.csv artifacts --no-open
+```
+
+You can also double-click report.html in File Explorer. If your system has no default HTML viewer, the app prints the report path; the generated outputs remain available. The report uses navy, teal, and amber colours, with a separate UTC generation timestamp supplied by TimeProvider.
 
 To export a PDF: press Ctrl+P (Cmd+P on macOS), choose Save as PDF, and use landscape orientation. Enable background graphics if you want the report colours included. PDF saving is a browser action; the app directly generates HTML.
 

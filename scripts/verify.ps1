@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 Set-Location (Split-Path $PSScriptRoot -Parent)
 function Assert-True($condition, $message) { if (-not $condition) { throw $message } }
 function Run-App($inputPath, $outputPath, $expectedExit) {
-    & dotnet run --file NormalizeExceptions.cs -- $inputPath $outputPath
+    & dotnet run --file NormalizeExceptions.cs -- $inputPath $outputPath --no-open
     Assert-True ($LASTEXITCODE -eq $expectedExit) "Unexpected exit code for $inputPath"
 }
 New-Item -ItemType Directory -Force artifacts | Out-Null
