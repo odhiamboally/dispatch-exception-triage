@@ -1,4 +1,20 @@
+# Generated build and run outputs
 bin/
 obj/
 artifacts/
+
+# Local rehearsal and personal preparation
+/VIDEO-SCRIPT.md
+/local-preparation/
+
+# Editor state
+.vs/
+.vscode/
+.idea/
 *.user
+*.suo
+
+# Local secrets
+.env
+.env.*
+!.env.example

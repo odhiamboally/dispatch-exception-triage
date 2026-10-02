@@ -4,6 +4,15 @@ Video: **[ADD PUBLIC VIDEO LINK BEFORE SUBMISSION]**
 
 Prepared for Ajaia: https://ajaia.ai
 
+Repository: [Dispatch Exception Triage](https://github.com/odhiamboally/dispatch-exception-triage)
+- [Build source](https://github.com/odhiamboally/dispatch-exception-triage/blob/main/NormalizeExceptions.cs)
+- [Run instructions](https://github.com/odhiamboally/dispatch-exception-triage/blob/main/README.md)
+- [Delivery plan](https://github.com/odhiamboally/dispatch-exception-triage/blob/main/DELIVERY-PLAN.md)
+- [Client status update](https://github.com/odhiamboally/dispatch-exception-triage/blob/main/CLIENT-UPDATE.md)
+- [Verification evidence](https://github.com/odhiamboally/dispatch-exception-triage/blob/main/VERIFICATION.md)
+
+Access: the repository is currently private. These links require granted reviewer access; attach the source ZIP/build file so access to the build does not depend on GitHub permissions.
+
 ## Task 1 — Triage and weekly plan
 
 Reasoning: read everything → identify launch risks and dependencies → assign actions and owners → correct the client update → execute and verify.
